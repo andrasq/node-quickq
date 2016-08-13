@@ -20,6 +20,8 @@
  * 2016-08-09 - Started - AR.
  */
 
+;(function(module){           // wrap in closure for browsers
+
 'use strict';
 
 var aflow = require('aflow');
@@ -164,12 +166,18 @@ QJobQueue.prototype._scheduleJobs = function _scheduleJobs( ) {
 // accelerate access
 QJobQueue.prototype = QJobQueue.prototype;
 
+})(module || window);
+
 
 // quicktest:
 /**
 
 var assert = require('assert');
 var timeit = require('qtimeit');
+
+var QJobQueue = module.exports;
+
+console.log("AR: test");
 
 assert.throws(function(){ var q = new QJobQueue() });
 
@@ -186,14 +194,17 @@ console.log("AR:", q);
 
 
 var t1 = timeit.fptime();
-for (var i=0; i<100000; i++) q.push(null, taskDone);
-q.push(null, function(){
-    q.fflush(function(){ 
-        var t2 = timeit.fptime();
-        console.log("AR: %d ms, ", t2 - t1, ncalls, ndone);
-        // 100k @10 813k/s, @1 370k/s, @20 892k/s, @40 926k/s
-    });
-})
+for (var i=0; i<1000000; i++) q.push(null, taskDone);
+q.drain = (function(){ 
+    var t2 = timeit.fptime();
+    console.log("AR: %d ms, ", t2 - t1, ncalls, ndone);
+    // 100k @10 2m/s, 1m @10 4.7m/s
+});
+q.fflush(function(){ 
+    var t2 = timeit.fptime();
+    console.log("AR: %d ms, ", t2 - t1, ncalls, ndone);
+});
+
 if (0) timeit(1, function(cb){ q.push(null, function(){ taskDone(); cb() }) }, function() {
     q.fflush(function(){
         console.log("AR:", ncalls, ndone);
