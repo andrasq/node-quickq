@@ -1,0 +1,15 @@
+{
+  "name": "quickq",
+  "version": "0.0.0",
+  "main": "quickq.js",
+  "description": "fast in-memory work queue",
+  "license": "Apache-2.0",
+  "repository": {
+    "url": "git://github.com/andrasq/node-quickq",
+    "type": "git"
+  },
+  "keywords": [ "quick", "in-memory", "work", "job", "queue", "Andras" ],
+  "scripts": {
+    "test": "nodejs test-quickq.js"
+  }
+}
