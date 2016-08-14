@@ -102,3 +102,9 @@ Related Work
 - [quickq](https://github.com/andrasq/node-quickq) - this package
 - [async.queue](https://npmjs.org/package/async) - in-memory work queue
 - [fastq](https://npmjs.org/package/fastq) - async.queue clone, but much faster
+
+
+Todo
+----
+
+- needs unit tests
