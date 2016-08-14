@@ -59,6 +59,7 @@ module.exports = QJobQueue;
  *   drain - when set to a function will call funcion whenever the queue empties
  */
 function QJobQueue( runner, options ) {
+    if (!this || this === global) return new QJobQueue(runner, options);
     options = options || {};
     if (typeof runner !== 'function') throw new Error("task runner function required");
 
