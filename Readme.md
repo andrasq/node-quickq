@@ -64,17 +64,16 @@ Benchmark
 
 Time to enqueue and run 1 million no-op tasks, timed with Date.now():
 
-        async.queue - 5.2 sec
-        fastq - 1.42 sec
-        quickq - 0.23 sec
+    async.queue - 5.2 sec
+    fastq - 1.42 sec
+    quickq - 0.23 sec
 
 Time create queue then enqueue and run 100k no-op tasks, timed with qtimeit:
 
-        node=6.2.2 arch=ia32 mhz=3500 cpu="AMD Phenom(tm) II X4 B55 Processor" up_threshold=11
-        name  speed  (stats)  rate
-        async.queue  2 / sec (1 runs of 4 in 1.885 over 10.666s, +/- 0%) 1000
-        fastq  7 / sec (3 runs of 4 in 1.536 over 4.512s, +/- 11.43%) 3681
-        quickq  47 / sec (10 runs of 4 in 0.850 over 2.640s, +/- 0.72%) 22178
+    node=6.2.2 arch=ia32 mhz=3500 cpu="AMD Phenom(tm) II X4 B55 Processor" up_threshold=11
+    async.queue  219,734 ops/sec (1 runs of 4 in 1.820 over 10.234s, +/- 0%) 1000
+    fastq  782,554 ops/sec (3 runs of 4 in 1.533 over 4.506s, +/- 0%) 3561
+    quickq  4,721,075 ops/sec (10 runs of 4 in 0.847 over 2.636s, +/- 0%) 21485
 
 
 Related Work

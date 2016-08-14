@@ -25,12 +25,14 @@
 'use strict';
 
 var aflow = require('aflow');
-var qslist = require('qslist');
+var qlist = require('qlist');
+//var qslist = require('qslist');
+
 //var FastList = require('fast-list');
 //    FastList.prototype.getLength = function(){ return this.length };
 //    FastList.prototype.isEmpty = function(){ return !this.length };
 //    FastList.prototype = FastList.prototype;
-var JobList = require('qlist');         // .23 sec / m
+var JobList = qlist;                    // .23 sec / m
     JobList.prototype.getLength = JobList.prototype.size;
     JobList.prototype = JobList.prototype;
 //var xJobList = qslist.SList;            // .42 sec / m

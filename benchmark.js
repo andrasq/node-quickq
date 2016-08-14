@@ -41,6 +41,7 @@ aflow.repeatWhile(
         var q2 = fastq(handler, 10);
         var q3 = quickq(handlerCb, {concurrency: 10});
         qtimeit.bench.timeGoal = 2;
+        qtimeit.bench.opsPerTest = ntasks;
         qtimeit.bench({
             'async.queue': function(done) {
                 ncalls = ndone = 0;
@@ -60,10 +61,14 @@ aflow.repeatWhile(
                 q.drain = done;
                 for (var i=0; i<ntasks; i++) q.push(0, taskDone);
             },
-        }, cb);
+        },
+        function(err){
+            console.log("--");
+            cb();
+        });
     },
     function(err) {
-        console.log("AR: Done.");
+        // console.log("Done.");
     }
 );
 

@@ -1,6 +1,6 @@
 {
   "name": "quickq",
-  "version": "0.2.2",
+  "version": "0.2.3",
   "main": "quickq.js",
   "description": "fast in-memory work queue",
   "license": "Apache-2.0",
