@@ -42,7 +42,7 @@ var JobList = require('qlist');         // .23 sec / m
 //    this.shift = function() { return qslist.shift(this.list).item };
 //    this.isEmpty = function() { return !this.list.length };
 //    this.getLength = function() { return this.list.length };
-}
+//}
 
 module.exports = QJobQueue;
 
