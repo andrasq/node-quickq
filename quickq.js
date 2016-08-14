@@ -25,7 +25,6 @@
 'use strict';
 
 var aflow = require('aflow');
-//var qslist = require('./qslist');
 var qslist = require('qslist');
 var FastList = require('fast-list');
     FastList.prototype.getLength = function(){ return this.length };
@@ -119,6 +118,7 @@ QJobQueue.prototype.resume = function resume( ) {
 }
 
 QJobQueue.prototype.fflush = function fflush( cb ) {
+    // TODO: call cb once *currently queued* jobs have all finished, not when completely empty
     if (!cb) throw new Error("callback function required");
     if (!this._fflush) this._fflush = [cb];
     else this._fflush.push(cb);
