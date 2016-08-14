@@ -55,6 +55,10 @@ aflow.repeatWhile(
                 q.drain = done;
                 for (var i=0; i<ntasks; i++) q.push(0, taskDone);
             },
+            // Note: running quickq in combination with fastq will cause quickq
+            // throughput to drop 45% on the 5th-6th run, from 5.0m/s to 2.7m/s
+            // (ie, from 6x faster to 3x faster than fastq).
+            // Quickq by itself or with just async.queue stays fast.
             quickq: function(done) {
                 ncalls = ndone = 0;
                 var q = quickq(handlerCb, {concurrency: 10});
