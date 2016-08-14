@@ -13,14 +13,22 @@ Similar to async.queue but much faster, less flaky, and with a simpler interface
 Overview
 --------
 
-        function runner(job, callback) {
-            console.log('processing job', job);
-            callback();
-        }
+    var quickq = require('quickq');
+    var queue = quickq(jobRunner);
 
-        var Quickq = require('quickq');
-        var q = new Quickq(runner);
-        q.push(job, callbackWhenDone);
+    function jobRunner(job, cb) {
+        console.log('processing job', job);
+        cb(null, 1234);
+    }
+
+    var job = 'job1-data';
+    queue.push(job, function(err, ret) {
+        console.log('job done, got', ret);
+    })
+
+    // =>
+    //   processing job job1-data
+    //   job done, got 1234
 
 
 Api
@@ -33,6 +41,18 @@ the job and a callback that must be called when the job is finished.
 
 Options:
 - `concurrency` - how many jobs to process concurrently (default 10)
+
+### q.push( payload [, callback(err, ret)] )
+
+Append a job (data to be processed) to the work queue.  If a callback is specified,
+it will be called after the job finishes.
+
+### q.unshift( payload [, callback(err, ret)] )
+
+Prepend a job to the work queue.  This job is placed at the head of the queue, it
+will be the next one to be processed.
+
+### 
 
 ### q.pause( )
 
