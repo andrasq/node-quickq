@@ -46,7 +46,7 @@ var JobList = qlist;                    // .23 sec / m
 //    this.getLength = function() { return this.list.length };
 //}
 
-module.exports = QJobQueue;
+module.exports = QuickQueue;
 
 /**
  * Constructor args:
@@ -60,8 +60,8 @@ module.exports = QJobQueue;
  *   concurrency - configured limit on how many tasks can be processed at the same time (r/w)
  *   drain - when set to a function will call funcion whenever the queue empties
  */
-function QJobQueue( runner, options ) {
-    if (!this || this === global) return new QJobQueue(runner, options);
+function QuickQueue( runner, options ) {
+    if (!this || this === global) return new QuickQueue(runner, options);
     options = options || {};
     if (typeof runner !== 'function') throw new Error("task runner function required");
 
@@ -81,17 +81,17 @@ function QJobQueue( runner, options ) {
     this._fflush = null;
 }
 
-QJobQueue.prototype.push = function push( payload, cb ) {
+QuickQueue.prototype.push = function push( payload, cb ) {
     this._insertJobs('push', payload, cb);
     return this;
 }
 
-QJobQueue.prototype.unshift = function unshift( payload, cb ) {
+QuickQueue.prototype.unshift = function unshift( payload, cb ) {
     this._insertJobs('unshift', payload, cb);
     return this;
 }
 
-QJobQueue.prototype._insertJobs = function _insertJobs( method, payload, cb ) {
+QuickQueue.prototype._insertJobs = function _insertJobs( method, payload, cb ) {
     if (payload && payload.constructor && payload.constructor.name === 'Array') {
         for (var i=0; i<payload.length; i++) this._insertJobs(method, payload[i], cb);
     }
@@ -108,19 +108,19 @@ QJobQueue.prototype._insertJobs = function _insertJobs( method, payload, cb ) {
     }
 }
 
-QJobQueue.prototype.pause = function pause( ) {
+QuickQueue.prototype.pause = function pause( ) {
     this.concurrency = -1;
     return this;
 }
 
-QJobQueue.prototype.resume = function resume( ) {
+QuickQueue.prototype.resume = function resume( ) {
     this.concurrency = this.options.concurrency;
     var njobs = Math.min(this.concurrency - this.runners, this._jobs.getLength());
     for (var i=0; i<njobs; i++) this._scheduleJobs();
     return this;
 }
 
-QJobQueue.prototype.fflush = function fflush( cb ) {
+QuickQueue.prototype.fflush = function fflush( cb ) {
     // TODO: call cb once *currently queued* jobs have all finished, not when completely empty
     if (!cb) throw new Error("callback function required");
     if (!this._fflush) this._fflush = [cb];
@@ -128,7 +128,7 @@ QJobQueue.prototype.fflush = function fflush( cb ) {
     return this;
 }
 
-QJobQueue.prototype._scheduleJobs = function _scheduleJobs( ) {
+QuickQueue.prototype._scheduleJobs = function _scheduleJobs( ) {
     var self = this;
     self.runners += 1;
     setImmediate(function() {
@@ -166,8 +166,13 @@ QJobQueue.prototype._scheduleJobs = function _scheduleJobs( ) {
     }
 }
 
+// aliases
+QuickQueue.prototype.enqueue = QuickQueue.prototype.push;
+QuickQueue.prototype.append = QuickQueue.prototype.push;
+QuickQueue.prototype.prepend = QuickQueue.prototype.unshift;
+
 // accelerate access
-QJobQueue.prototype = QJobQueue.prototype;
+QuickQueue.prototype = QuickQueue.prototype;
 
 })(module || window);
 
@@ -178,11 +183,11 @@ QJobQueue.prototype = QJobQueue.prototype;
 var assert = require('assert');
 var timeit = require('qtimeit');
 
-var QJobQueue = module.exports;
+var QuickQueue = module.exports;
 
 console.log("AR: test");
 
-assert.throws(function(){ var q = new QJobQueue() });
+assert.throws(function(){ var q = new QuickQueue() });
 
 var ncalls = 0, ndone = 0;
 function runner(payload, cb) {
@@ -192,7 +197,7 @@ function runner(payload, cb) {
 function taskDone() {
     ndone += 1;
 }
-var q = new QJobQueue(runner, {concurrency: 40});
+var q = new QuickQueue(runner, {concurrency: 40});
 console.log("AR:", q);
 
 
