@@ -1,6 +1,6 @@
 {
   "name": "quickq",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "main": "quickq.js",
   "description": "fast in-memory work queue",
   "license": "Apache-2.0",
@@ -9,6 +9,10 @@
     "type": "git"
   },
   "keywords": [ "quick", "in-memory", "work", "job", "queue", "Andras" ],
+  "dependencies": {
+    "qlist": "0.11.1",
+    "aflow": "0.10.1"
+  },
   "scripts": {
     "todo-test": "nodejs test-quickq.js"
   }
