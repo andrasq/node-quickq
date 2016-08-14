@@ -10,6 +10,6 @@
   },
   "keywords": [ "quick", "in-memory", "work", "job", "queue", "Andras" ],
   "scripts": {
-    "test": "nodejs test-quickq.js"
+    "todo-test": "nodejs test-quickq.js"
   }
 }
