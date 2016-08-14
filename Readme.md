@@ -13,11 +13,16 @@ Similar to async.queue but much faster, less flaky, and with a simpler interface
 Benchmark
 ---------
 
+Time to queue and run 1 million no-op tasks:
+
+- async.queue - 5.2 sec
+- fastq - 1.42 sec
+- quickq - 0.23 sec
+
 
 Related Work
 ------------
 
-- [quickq]() - this package
-- [async.queue]() - in-memory work queue
-- [fastq]() - async.queue clone, but much faster
-
+- [quickq](https://github.com/andrasq/node-quickq) - this package
+- [async.queue](https://npmjs.org/package/async) - in-memory work queue
+- [fastq](https://npmjs.org/package/fastq) - async.queue clone, but much faster
