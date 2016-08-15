@@ -75,11 +75,13 @@ will be the next one to be processed.
 
 ### q.pause( )
 
-Stop processing jobs.  Currently running jobs will finish though.
+Stop processing jobs by setting concurrency to -1.  Currently running jobs will
+still finish though.
 
 ### q.resume( )
 
-Resume processing jobs.
+Resume processing jobs by restoring the last positive concurrency used.  If
+concurrency was never positive, sets concurrency to 10.
 
 ### q.fflush( cb )
 

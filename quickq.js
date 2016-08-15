@@ -29,25 +29,15 @@ var aflow = require('aflow');
 var qlist = require('qlist');
 //var qslist = require('qslist');
 
-//var FastList = require('fast-list');
-//    FastList.prototype.getLength = function(){ return this.length };
-//    FastList.prototype.isEmpty = function(){ return !this.length };
-//    FastList.prototype = FastList.prototype;
-var JobList = qlist;                    // .23 sec / m
+// time to queue and run 1m jobs:
+//   qlist: .23s, double-ended-queue: .29s, qslist: .42s, fast-list: .64s
+var JobList = qlist;
     JobList.prototype.getLength = JobList.prototype.size;
     JobList.prototype = JobList.prototype;
-//var xJobList = qslist.SList;            // .42 sec / m
-//var xJobList = FastList;                // .64 sec / m
-//var xJobList = function JobList() {     // .46 sec / m (building object and predeclaring _next)
-//    var list = this.list = qslist.create();
-//    this.push = function(item) { qslist.push(this.list, { item: item, _next: 0 }) };
-//    this.unshift = function(item) { qslist.unshift(this.list, { item: item, _next: 0 }) };
-//    this.shift = function() { return qslist.shift(this.list).item };
-//    this.isEmpty = function() { return !this.list.length };
-//    this.getLength = function() { return this.list.length };
-//}
 
 module.exports = QuickQueue;
+
+var defaultConcurrency = 10;
 
 /**
  * Constructor args:
@@ -67,7 +57,7 @@ function QuickQueue( runner, options ) {
     if (typeof runner !== 'function') throw new Error("task runner function required");
 
     this.options = {
-        concurrency: (options.concurrency > 0) ? parseInt(options.concurrency) : 10,
+        concurrency: (options.concurrency > 0) ? parseInt(options.concurrency) : defaultConcurrency,
     }
 
     this.length = 0;
@@ -110,12 +100,13 @@ QuickQueue.prototype._insertJobs = function _insertJobs( method, payload, cb ) {
 }
 
 QuickQueue.prototype.pause = function pause( ) {
+    if (this.concurrency > 0) this.options.concurrency = this.concurrency;
     this.concurrency = -1;
     return this;
 }
 
 QuickQueue.prototype.resume = function resume( ) {
-    this.concurrency = this.options.concurrency;
+    this.concurrency = this.options.concurrency || defaultConcurrency;
     var njobs = Math.min(this.concurrency - this.runners, this._jobs.getLength());
     for (var i=0; i<njobs; i++) this._scheduleJob();
     return this;
@@ -149,7 +140,7 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
             },
             function(err) {
                 self.runners -= 1;
-                if (!self.runners && !self._jobs.getLength()) {
+                if (!self.runners && self._jobs.isEmpty()) {
                     // last runner to exit notifies of drain
                     notifyQueueEmpty(self);
                 }
