@@ -54,6 +54,8 @@ var defaultConcurrency = 10;
 function QuickQueue( runner, options ) {
     if (!this || this === global) return new QuickQueue(runner, options);
     options = options || {};
+    if (typeof options === 'number') options = { concurrency: options };
+    else if (!options) options = {};
     if (typeof runner !== 'function') throw new Error("task runner function required");
 
     this.options = {

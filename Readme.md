@@ -53,7 +53,8 @@ Api
 
 ### q = quickq( runner [, options] )
 
-Job queue factory, same as `q = new quickq()`
+Job queue factory, same as `q = new quickq()`.  If options is a number, it will be
+used as the concurrency.
 
 - `runner` - the function that will process the job.  Runner takes two arguments,
 the job and a callback that must be called when the job is finished.
