@@ -51,7 +51,9 @@ Time create queue then enqueue and run 100k no-op tasks, timed with qtimeit:
 Api
 ---
 
-### q = new Quickq( runner [, options] )
+### q = quickq( runner [, options] )
+
+Job queue factory, same as `q = new quickq()`
 
 - `runner` - the function that will process the job.  Runner takes two arguments,
 the job and a callback that must be called when the job is finished.
