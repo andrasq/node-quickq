@@ -4,14 +4,15 @@
  * Copyright (C) 2016 Andras Radics
  * Licensed under the Apache License, Version 2.0
  *
+ * A job queue is a `runner` function and a queue of job data to be processed.
+ *
  * The job runner is a function taking a callback is called to process
  * each queued job payload.  Jobs are processed concurrently up to the
  * specified concurrency limit (default 10).
  *
- * A job queue is a `runner` function and a queue of job data to be processed.
- * Each data item is queued with an optional callback to call with the
- * computed result when that job finishes.  The job data is picked up
- * for processing in the order queued (but may complete out of order).
+ * Each data item is queued with an optional callback to receive the
+ * computed result when that job finishes.  The jobs are picked up for
+ * processing in the order queued (but may complete out of order).
  *
  * Placing data into the queue starts the processing on the next event loop
  * iteration.  Processing is done with up to `concurrency` threads at a time.
@@ -58,7 +59,7 @@ module.exports = QuickQueue;
  *   length - number of tasks in the queue (ro)
  *   running - number of tasks currently being processed (ro)
  *   concurrency - configured limit on how many tasks can be processed at the same time (r/w)
- *   drain - when set to a function will call funcion whenever the queue empties
+ *   drain - when set, the function to call whenever the queue empties
  */
 function QuickQueue( runner, options ) {
     if (!this || this === global) return new QuickQueue(runner, options);
@@ -104,7 +105,7 @@ QuickQueue.prototype._insertJobs = function _insertJobs( method, payload, cb ) {
             this._callbacks.unshift(cb);
         }
         this.length += 1;
-        if (this.runners < this.concurrency) this._scheduleJobs();
+        if (this.runners < this.concurrency) this._scheduleJob();
     }
 }
 
@@ -116,7 +117,7 @@ QuickQueue.prototype.pause = function pause( ) {
 QuickQueue.prototype.resume = function resume( ) {
     this.concurrency = this.options.concurrency;
     var njobs = Math.min(this.concurrency - this.runners, this._jobs.getLength());
-    for (var i=0; i<njobs; i++) this._scheduleJobs();
+    for (var i=0; i<njobs; i++) this._scheduleJob();
     return this;
 }
 
@@ -128,7 +129,7 @@ QuickQueue.prototype.fflush = function fflush( cb ) {
     return this;
 }
 
-QuickQueue.prototype._scheduleJobs = function _scheduleJobs( ) {
+QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
     var self = this;
     self.runners += 1;
     setImmediate(function() {
@@ -149,7 +150,7 @@ QuickQueue.prototype._scheduleJobs = function _scheduleJobs( ) {
             function(err) {
                 self.runners -= 1;
                 if (!self.runners && !self._jobs.getLength()) {
-                    // the last runner to exit notifies of the drain
+                    // last runner to exit notifies of drain
                     notifyQueueEmpty(self);
                 }
             }
