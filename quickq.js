@@ -27,9 +27,8 @@
 
 var aflow = require('aflow');
 var qlist = require('qlist');
-//var qslist = require('qslist');
 
-// time to queue and run 1m jobs:
+// time to queue and run 1m jobs depending on the list used:
 //   qlist: .23s, double-ended-queue: .29s, qslist: .42s, fast-list: .64s
 var JobList = qlist;
     JobList.prototype.getLength = JobList.prototype.size;
