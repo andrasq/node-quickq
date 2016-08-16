@@ -65,14 +65,12 @@ Options:
 ### q.push( payload [, callback(err, ret)] )
 
 Append a job (data to be processed) to the work queue.  If a callback is specified,
-it will be called after the job finishes.
+it will be called when the job finishes.
 
 ### q.unshift( payload [, callback(err, ret)] )
 
-Prepend a job to the work queue.  This job is placed at the head of the queue, it
+Prepend a job to the work queue.  The job is placed at the head of the queue, it
 will be the next one to be processed.
-
-### 
 
 ### q.pause( )
 
