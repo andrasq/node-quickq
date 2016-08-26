@@ -92,7 +92,8 @@ If set, function to call whenever the work queue empties.
 
 ### q.length
 
-The number of jobs in the queue waiting to be processed.
+The number of jobs in the queue that have not finished yet, ie jobs waiting to run
+or running.
 
 ### q.running
 

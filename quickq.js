@@ -131,7 +131,6 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
                 if (self.runners > self.concurrency) return done(null, true);
                 var job = self._jobs.shift();
                 var cb = self._callbacks.shift();
-                self.length -= 1;
                 self.running += 1;
                 self._runner(job, function(err, ret) {
                     if (cb) cb(err, ret);
@@ -140,6 +139,7 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
                 })
             },
             function(err) {
+                self.length -= 1;
                 self.runners -= 1;
                 if (!self.runners && self._jobs.isEmpty()) {
                     // last runner to exit notifies of drain
