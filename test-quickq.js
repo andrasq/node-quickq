@@ -160,7 +160,7 @@ module.exports = {
     },
 
     'speed': {
-        'should run 10k tasks fast': function(t) {
+        'should run 100k tasks': function(t) {
             var q = quickq(function(job, cb) { cb() });
             var ndone = 0;
             function whenDone() { ndone += 1 }
