@@ -111,4 +111,4 @@ Related Work
 Todo
 ----
 
-- needs unit tests
+- figure out how to wrap in closure for browsers and still maintain 100% coverage

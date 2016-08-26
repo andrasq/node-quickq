@@ -21,7 +21,8 @@
  * 2016-08-09 - Started - AR.
  */
 
-;(function(module){           // wrap in closure for browsers
+// TODO: figure out how to wrap for browsers and still maintain 100% covreage
+//;(function(module){           // wrap in closure for browsers
 
 'use strict';
 
@@ -52,10 +53,8 @@ var defaultConcurrency = 10;
  */
 function QuickQueue( runner, options ) {
     if (!this || this === global) return new QuickQueue(runner, options);
-    options = options || {};
-    if (typeof options === 'number') options = { concurrency: options };
-    else if (!options) options = {};
     if (typeof runner !== 'function') throw new Error("task runner function required");
+    if (typeof options !== 'object') options = { concurrency: options };
 
     this.options = {
         concurrency: (options.concurrency > 0) ? parseInt(options.concurrency) : defaultConcurrency,
@@ -67,6 +66,7 @@ function QuickQueue( runner, options ) {
     this.concurrency = this.options.concurrency;
     this.drain = null;
 
+    this._lastConcurrency = this.concurrency;
     this._runner = runner;
     this._jobs = new JobList();
     this._callbacks = new JobList();
@@ -101,13 +101,13 @@ QuickQueue.prototype._insertJobs = function _insertJobs( method, payload, cb ) {
 }
 
 QuickQueue.prototype.pause = function pause( ) {
-    if (this.concurrency > 0) this.options.concurrency = this.concurrency;
+    if (this.concurrency > 0) this._lastConcurrency = this.concurrency;
     this.concurrency = -1;
     return this;
 }
 
 QuickQueue.prototype.resume = function resume( ) {
-    this.concurrency = this.options.concurrency || defaultConcurrency;
+    this.concurrency = this._lastConcurrency;
     var njobs = Math.min(this.concurrency - this.runners, this._jobs.getLength());
     for (var i=0; i<njobs; i++) this._scheduleJob();
     return this;
@@ -115,9 +115,10 @@ QuickQueue.prototype.resume = function resume( ) {
 
 QuickQueue.prototype.fflush = function fflush( cb ) {
     // TODO: call cb once *currently queued* jobs have all finished, not when completely empty
-    if (!cb) throw new Error("callback function required");
-    if (!this._fflush) this._fflush = [cb];
-    else this._fflush.push(cb);
+    if (cb) {
+        if (!this._fflush) this._fflush = [cb];
+        else this._fflush.push(cb);
+    }
     return this;
 }
 
@@ -182,7 +183,7 @@ QuickQueue.prototype.prepend = QuickQueue.prototype.unshift;
 // accelerate access
 QuickQueue.prototype = QuickQueue.prototype;
 
-})(module || window);
+//})(module || window);
 
 
 // quicktest:

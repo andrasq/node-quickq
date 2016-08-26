@@ -13,7 +13,11 @@
     "qlist": "0.11.1",
     "aflow": "0.10.1"
   },
+  "devDependencies": {
+    "qnit": "^0.11.0"
+  },
   "scripts": {
-    "todo-test": "nodejs test-quickq.js"
+    "coverage": "nyc --reporter lcov --reporter text qnit test-quickq.js",
+    "test": "qnit test-quickq.js"
   }
 }
