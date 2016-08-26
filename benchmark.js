@@ -78,9 +78,10 @@ aflow.repeatWhile(
 
 // 1m times measured with
 if (0) {
+    var timeit = require('qtimeit');
     //q = async.queue(handler, 10);
     //q = fastq(handler, 10);
-    q = new quickq(handlerCb, {concurrency: 10});
+    var q = new quickq(handlerCb, {concurrency: 10});
 
     var t1 = timeit.fptime();
     for (var i=0; i<1000000; i++) q.push(0, taskDone);
