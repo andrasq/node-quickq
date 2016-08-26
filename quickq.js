@@ -121,22 +121,37 @@ QuickQueue.prototype.fflush = function fflush( cb ) {
     return this;
 }
 
+function tryRunner( handler, job, cb ) {
+    try {
+        handler(job, cb);
+    }
+    catch (err) {
+        cb(err);
+    }
+}
+
 QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
     var self = this;
     self.runners += 1;
+
+    // create a single closure to reuse the job completion callback function
+    var job, cb, jobDoneCb;
+    function whenJobDone(err, ret) {
+        if (cb) cb(err, ret);
+        self.running -= 1;
+        jobDoneCb();
+    }
+
     setImmediate(function() {
         aflow.repeatUntil(
             function(done) {
                 if (self._jobs.isEmpty()) return done(null, true);
                 if (self.runners > self.concurrency) return done(null, true);
-                var job = self._jobs.shift();
-                var cb = self._callbacks.shift();
+                job = self._jobs.shift();
+                cb = self._callbacks.shift();
+                jobDoneCb = done;
                 self.running += 1;
-                self._runner(job, function(err, ret) {
-                    if (cb) cb(err, ret);
-                    self.running -= 1;
-                    done();
-                })
+                tryRunner(self._runner, job, whenJobDone);
             },
             function(err) {
                 self.length -= 1;
