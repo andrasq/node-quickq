@@ -77,31 +77,23 @@ function noop() {
 }
 
 QuickQueue.prototype.push = function push( payload, cb ) {
-    this._insertJobs('push', payload, cb);
+    this.length += 1;
+    if (this.runners < this.concurrency) this._scheduleJob();
+    //else {
+        this._jobs.push(payload);
+        this._callbacks.push(cb);
+    //}
     return this;
 }
 
 QuickQueue.prototype.unshift = function unshift( payload, cb ) {
-    this._insertJobs('unshift', payload, cb);
+    this.length += 1;
+    if (this.runners < this.concurrency) this._scheduleJob();
+    //else {
+        this._jobs.unshift(payload);
+        this._callbacks.unshift(cb);
+    //}
     return this;
-}
-
-QuickQueue.prototype._insertJobs = function _insertJobs( method, payload, cb ) {
-    if (!cb) cb = noop;
-    if (payload && payload.constructor && payload.constructor.name === 'Array') {
-        for (var i=0; i<payload.length; i++) this._insertJobs(method, payload[i], cb);
-    }
-    else {
-        if (method === 'push') {
-            this._jobs.push(payload);
-            this._callbacks.push(cb);
-        } else {
-            this._jobs.unshift(payload);
-            this._callbacks.unshift(cb);
-        }
-        this.length += 1;
-        if (this.runners < this.concurrency) this._scheduleJob();
-    }
 }
 
 QuickQueue.prototype.pause = function pause( ) {
@@ -112,8 +104,10 @@ QuickQueue.prototype.pause = function pause( ) {
 
 QuickQueue.prototype.resume = function resume( ) {
     this.concurrency = this._lastConcurrency;
-    var njobs = Math.min(this.concurrency - this.runners, this._jobs.getLength());
-    for (var i=0; i<njobs; i++) this._scheduleJob();
+    var njobs = this.concurrency - this.runners;
+    while (njobs-- > 0) {
+        this._scheduleJob();
+    }
     return this;
 }
 
@@ -130,13 +124,13 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
     var self = this;
     self.runners += 1;
 
-    // much faster to reuse a single closure for the job completion callback
+    // much faster to reuse a single closure for the job completion callbacks
     var job, cb, jobDoneCb;
     function whenJobDone(err, ret) {
         self.running -= 1;
         self.length -= 1;
         // errors returned from the handler we pass to cb
-        // queue ignores job errors otherwise
+        // the queue ignores job errors otherwise
         cb(err, ret);
         jobDoneCb();
     }
@@ -147,7 +141,7 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
                 if (self._jobs.isEmpty()) return done(null, true);
                 if (self.runners > self.concurrency) return done(null, true);
                 job = self._jobs.shift();
-                cb = self._callbacks.shift();
+                cb = self._callbacks.shift() || noop;
                 jobDoneCb = done;
                 // TODO: raise concurrency if user increased limit
                 self.running += 1;
@@ -160,26 +154,27 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
                     self.length -= 1;
                     // errors thrown in the handler are vectored here, we pass to cb
                     cb(err);
-                    // start a new runner to take the place of this one
+                    // start a new runner to take the place of this one that stopped looping
                     if (!self._jobs.isEmpty()) {
                         self._scheduleJob();
                     }
                 }
                 if (!self.runners && self._jobs.isEmpty()) {
                     // last runner to exit notifies of drain
-                    notifyQueueEmpty(self);
+                    self._notifyQueueEmpty(self);
                 }
             }
         );
     });
+}
 
-    function notifyQueueEmpty(self) {
-        if (self.drain) self.drain();
-        if (self._fflush) {
-            var callbacks = self._fflush;
-            self._fflush = null;
-            for (var i=0; i<callbacks.length; i++) callbacks[i]();
-        }
+QuickQueue.prototype._notifyQueueEmpty = function _notifyQueueEmpty( ) {
+    var self = this;
+    if (self.drain) self.drain();
+    if (self._fflush) {
+        var callbacks = self._fflush;
+        self._fflush = null;
+        for (var i=0; i<callbacks.length; i++) callbacks[i]();
     }
 }
 

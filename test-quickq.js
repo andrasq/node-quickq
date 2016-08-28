@@ -61,7 +61,8 @@ module.exports = {
         'unshift should enqueue job': function(t) {
             this.q.unshift(1);
             t.equal(this.q.length, 1);
-            this.q.unshift([2, 3]);
+            this.q.unshift(2);
+            this.q.unshift(3);
             t.equal(this.q.length, 3);
             t.done();
         },
