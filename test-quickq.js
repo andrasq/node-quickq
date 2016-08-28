@@ -67,9 +67,10 @@ module.exports = {
         },
 
         'push should enqueue array of jobs': function(t) {
-            this.q.push([1]);
+            this.q.push(1);
             t.equal(this.q.length, 1);
-            this.q.push([2, 3]);
+            this.q.push(2);
+            this.q.push(3);
             t.equal(this.q.length, 3);
             t.done();
         },
@@ -106,7 +107,8 @@ module.exports = {
                 if (q.running > maxRunning) maxRunning = q.running;
                 setTimeout(cb, 1);
             }, 4);
-            q.push([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            var data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            for (var i=0; i<data.length; i++) q.push(data[i]);
             setTimeout(function(){
                 t.equal(maxRunning, 4);
                 t.done();
@@ -120,7 +122,8 @@ module.exports = {
                 if (runners.length == 5) q.concurrency = 2;
                 cb();
             }, 4);
-            q.push([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+            var data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            for (var i=0; i<data.length; i++) q.push(data[i]);
             q.drain = function() {
                 t.deepEqual(runners.slice(5), [2, 2, 2, 2, 2]);
                 t.done();
