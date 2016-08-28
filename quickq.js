@@ -122,24 +122,17 @@ QuickQueue.prototype.fflush = function fflush( cb ) {
     return this;
 }
 
-function tryRunner( handler, job, cb ) {
-    try {
-        handler(job, cb);
-    }
-    catch (err) {
-        cb(err);
-    }
-}
-
 QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
     var self = this;
     self.runners += 1;
 
-    // create a single closure to reuse the job completion callback function
+    // much faster to reuse a single closure for the job completion callback
     var job, cb, jobDoneCb;
     function whenJobDone(err, ret) {
-        if (cb) cb(err, ret);
         self.running -= 1;
+        self.length -= 1;
+        if (cb) cb(err, ret);
+        // queue ignores job errors if no callback
         jobDoneCb();
     }
 
@@ -151,12 +144,19 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
                 job = self._jobs.shift();
                 cb = self._callbacks.shift();
                 jobDoneCb = done;
+                // TODO: raise concurrency if user increased limit
                 self.running += 1;
-                tryRunner(self._runner, job, whenJobDone);
+                self._runner(job, whenJobDone);
             },
             function(err) {
-                self.length -= 1;
                 self.runners -= 1;
+                if (err) {
+                    // errors thrown in the handler are vectored here, we pass to cb.
+                    // Errors from inside cb are rethrown by repeatUntil.
+                    self.running -= 1;
+                    self.length -= 1;
+                    if (cb) cb(err);
+                }
                 if (!self.runners && self._jobs.isEmpty()) {
                     // last runner to exit notifies of drain
                     notifyQueueEmpty(self);

@@ -38,16 +38,16 @@ Time to enqueue and run 1 million no-op tasks, timed with Date.now():
 
     async.queue - 5.2 sec
     fastq - 1.42 sec
-    quickq - 0.19 sec
+    quickq - 0.17 sec
 
 Time create queue then enqueue and run 100k no-op tasks, timed with qtimeit:
-(async-2.0.1, fastq-1.4.1, quickq-0.5.0)
+(async-2.0.1, fastq-1.4.1, quickq-0.6.0)
 
     node=6.2.2 arch=ia32 mhz=3500 cpu="AMD Phenom(tm) II X4 B55 Processor" up_threshold=11
     name  speed  (stats)  rate
-    async.queue  219,736 ops/sec (1 runs of 4 in 1.820 over 10.387s, +/- 0%) 1000
-    fastq  807,091 ops/sec (3 runs of 4 in 1.487 over 4.600s, +/- 0%) 3673
-    quickq  5,695,050 ops/sec (5 runs of 20 in 1.756 over 3.013s, +/- 0%) 25918
+    async.queue  218,014 ops/sec (1 runs of 4 in 1.835 over 10.427s, +/- 0%) 1000
+    fastq  808,126 ops/sec (3 runs of 4 in 1.485 over 4.607s, +/- 0%) 3707
+    quickq  6,601,891 ops/sec (5 runs of 20 in 1.515 over 2.693s, +/- 0%) 30282
 
 
 Api
@@ -114,3 +114,6 @@ Todo
 ----
 
 - figure out how to wrap in closure for browsers and still maintain 100% coverage
+- accept concurrency to resume()
+- change _scheduleJob to take as input the first job to run, deprecate getLength() use just isEmpty()
+- remove support for pushing array of jobs, minor syntactic sugar slows down the fast path
