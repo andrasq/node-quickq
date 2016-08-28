@@ -73,6 +73,9 @@ function QuickQueue( runner, options ) {
     this._fflush = null;
 }
 
+function noop() {
+}
+
 QuickQueue.prototype.push = function push( payload, cb ) {
     this._insertJobs('push', payload, cb);
     return this;
@@ -84,6 +87,7 @@ QuickQueue.prototype.unshift = function unshift( payload, cb ) {
 }
 
 QuickQueue.prototype._insertJobs = function _insertJobs( method, payload, cb ) {
+    if (!cb) cb = noop;
     if (payload && payload.constructor && payload.constructor.name === 'Array') {
         for (var i=0; i<payload.length; i++) this._insertJobs(method, payload[i], cb);
     }
@@ -131,8 +135,9 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
     function whenJobDone(err, ret) {
         self.running -= 1;
         self.length -= 1;
-        if (cb) cb(err, ret);
-        // queue ignores job errors if no callback
+        // errors returned from the handler we pass to cb
+        // queue ignores job errors otherwise
+        cb(err, ret);
         jobDoneCb();
     }
 
@@ -151,11 +156,14 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
             function(err) {
                 self.runners -= 1;
                 if (err) {
-                    // errors thrown in the handler are vectored here, we pass to cb.
-                    // Errors from inside cb are rethrown by repeatUntil.
                     self.running -= 1;
                     self.length -= 1;
-                    if (cb) cb(err);
+                    // errors thrown in the handler are vectored here, we pass to cb
+                    cb(err);
+                    // start a new runner to take the place of this one
+                    if (!self._jobs.isEmpty()) {
+                        self._scheduleJob();
+                    }
                 }
                 if (!self.runners && self._jobs.isEmpty()) {
                     // last runner to exit notifies of drain

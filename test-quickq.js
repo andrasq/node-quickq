@@ -151,14 +151,15 @@ module.exports = {
         'should return exceptions from inside handler': function(t) {
             var q = quickq(function(job, cb) {
                 throw new Error("die");
-            });
+            }, 1);
             var self = this;
             q.push(1, function(err, ret) {
                 t.ok(err);
                 t.equal(err.message, "die");
                 t.done();
             });
-            setTimeout(function(){}, 1);
+            q.push(2);
+            setTimeout(function(){}, 5);
         },
     },
 
