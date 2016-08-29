@@ -76,17 +76,16 @@ aflow.repeatWhile(
     }
 );
 
-// 1m times measured with
+// 1m times measured with process.hrtime()
 if (0) {
-    var timeit = require('qtimeit');
     //q = async.queue(handler, 10);
     //q = fastq(handler, 10);
     var q = new quickq(handlerCb, {concurrency: 10});
 
-    var t1 = timeit.fptime();
+    var t1 = qtimeit.fptime();
     for (var i=0; i<1000000; i++) q.push(0, taskDone);
     q.drain = function onDrain( ) {
-        var t2 = timeit.fptime();
+        var t2 = qtimeit.fptime();
         console.log("AR: %d/%d tasks done in %d ms", ndone, ncalls, t2 - t1);
     }
 }
