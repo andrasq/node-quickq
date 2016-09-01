@@ -102,8 +102,11 @@ QuickQueue.prototype.pause = function pause( ) {
     return this;
 }
 
-QuickQueue.prototype.resume = function resume( ) {
-    this.concurrency = this._lastConcurrency;
+QuickQueue.prototype.resume = function resume( concurrency ) {
+    if (concurrency === undefined) {
+        concurrency =  (this.concurrency > 0) ? this.concurrency : this._lastConcurrency;
+    }
+    this.concurrency = concurrency;
     var njobs = this.concurrency - this.runners;
     while (njobs-- > 0) {
         this._scheduleJob();
@@ -143,7 +146,6 @@ QuickQueue.prototype._scheduleJob = function _scheduleJob( ) {
                 job = self._jobs.shift();
                 cb = self._callbacks.shift() || noop;
                 jobDoneCb = done;
-                // TODO: raise concurrency if user increased limit
                 self.running += 1;
                 self._runner(job, whenJobDone);
             },

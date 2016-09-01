@@ -41,13 +41,13 @@ Time to enqueue and run 1 million no-op tasks, timed with Date.now():
     quickq - 0.16 sec
 
 Time create queue then enqueue and run 100k no-op tasks, timed with qtimeit:
-(async-2.0.1, fastq-1.4.1, quickq-0.7.0)
+(node-v6.3.0, async-2.0.1, fastq-1.4.1, quickq-0.8.0)
 
-    node=6.2.2 arch=ia32 mhz=3500 cpu="AMD Phenom(tm) II X4 B55 Processor" up_threshold=11
+    node=6.3.0 arch=ia32 mhz=3500 cpu="AMD Phenom(tm) II X4 B55 Processor" up_threshold=11
     name  speed  (stats)  rate
-    async.queue  211,185 ops/sec (1 runs of 4 in 1.894 over 10.682s, +/- 0%) 1000
-    fastq  804,067 ops/sec (3 runs of 4 in 1.492 over 4.616s, +/- 0%) 3807
-    quickq  6,804,653 ops/sec (5 runs of 20 in 1.470 over 2.653s, +/- 0%) 32221
+    async.queue  229,857 ops/sec (1 runs of 4 in 1.740 over 9.418s, +/- 0%) 1000
+    fastq  866,763 ops/sec (3 runs of 4 in 1.384 over 4.502s, +/- 0%) 3771
+    quickq  6,953,456 ops/sec (6 runs of 20 in 1.726 over 2.977s, +/- 0%) 30251
 
 
 Api
@@ -79,10 +79,12 @@ will be the next one to be processed.
 Stop processing jobs by setting concurrency to -1.  Currently running jobs will
 still finish though.
 
-### q.resume( )
+### q.resume( [concurrency] )
 
-Resume processing jobs by restoring the last positive concurrency used.  If
-concurrency was never positive, sets concurrency to 10.
+Resume processing jobs by either setting concurrency to the given concurrency, or
+restoring the last positive concurrency used.  If concurrency was never positive,
+sets concurrency to 10.
+
 
 ### q.fflush( cb )
 
@@ -95,11 +97,17 @@ If set, function to call whenever the work queue empties.
 ### q.length
 
 The number of jobs in the queue that have not finished yet, ie jobs waiting to run
-or running.
+or running.  Do not alter this value.
 
 ### q.running
 
-The number of jobs currently being processed.
+The number of jobs currently being processed.  Do not alter.
+
+### q.concurrency
+
+The currently configured concurrency.  Setting this value lower will immediately
+lower the concurrency.  Raising this value takes effect after a pause, else use
+`resume(concurrency)` instead.
 
 
 Related Work
@@ -114,6 +122,5 @@ Todo
 ----
 
 - figure out how to wrap in closure for browsers and still maintain 100% coverage
-- accept concurrency to resume()
 - change _scheduleJob to take as input the first job to run, deprecate getLength() use just isEmpty()
 

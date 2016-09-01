@@ -102,6 +102,22 @@ module.exports = {
             }, 5);
         },
 
+        'resume should not change existing concurrency': function(t) {
+            this.q.pause();
+            this.q.concurrency = 3;
+            this.q.resume();
+            t.equal(this.q.concurrency, 3);
+            t.done();
+        },
+
+        'resume should set concurrency': function(t) {
+            this.q.pause();
+            this.q.concurrency = 3;
+            this.q.resume(7);
+            t.equal(this.q.concurrency, 7);
+            t.done();
+        },
+
         'should run many jobs not exceeding concurrency': function(t) {
             var maxRunning = 0;
             var q = quickq(function(job, cb){
@@ -127,6 +143,21 @@ module.exports = {
             for (var i=0; i<data.length; i++) q.push(data[i]);
             q.drain = function() {
                 t.deepEqual(runners.slice(5), [2, 2, 2, 2, 2]);
+                t.done();
+            }
+        },
+
+        'should increase runners to match concurrency': function(t) {
+            var runners = [];
+            var q = quickq(function(job, cb) {
+                runners.push(q.runners);
+                if (runners.length == 5) q.resume(4);
+                cb();
+            }, 2);
+            var data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            for (var i=0; i<data.length; i++) q.push(data[i]);
+            q.drain = function() {
+                t.deepEqual(runners, [2, 2, 2, 2, 2, 4, 4, 4, 4, 4]);
                 t.done();
             }
         },
