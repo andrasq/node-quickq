@@ -50,6 +50,17 @@ Time create queue then enqueue and run 100k no-op tasks, timed with qtimeit:
     quickq  6,953,456 ops/sec (6 runs of 20 in 1.726 over 2.977s, +/- 0%) 30251
 
 
+Analysis
+--------
+
+For its 30x efficiency improvement over `async.queue`, `quickq` leverages
+- [aflow.repeatUntil](https://npmjs.org/package/aflow), is very very efficient at
+  looping over async functions, eg the job runner
+- the job callbacks are invoked from a pre-defined function, not from an inline
+  callback created inside the function call arguments list
+- omitting convenience features from the api that add delays to the critical path
+
+
 Api
 ---
 
@@ -115,6 +126,7 @@ Related Work
 - [quickq](https://github.com/andrasq/node-quickq) - this package
 - [async.queue](https://npmjs.org/package/async) - in-memory work queue
 - [fastq](https://npmjs.org/package/fastq) - async.queue clone, but much faster
+- [aflow](https://npmjs.org/package/aflow) - lean, efficient async serial flow control
 
 
 Todo
