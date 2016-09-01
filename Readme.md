@@ -101,13 +101,12 @@ or running.  Do not alter this value.
 
 ### q.running
 
-The number of jobs currently being processed.  Do not alter.
+The number of jobs currently being processed.  Do not alter this value.
 
 ### q.concurrency
 
 The currently configured concurrency.  Setting this value lower will immediately
-lower the concurrency.  Raising this value takes effect after a pause, else use
-`resume(concurrency)` instead.
+lower the concurrency.  Raising this value takes effect on the next call to `resume`.
 
 
 Related Work
