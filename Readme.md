@@ -126,7 +126,8 @@ Related Work
 - [quickq](https://github.com/andrasq/node-quickq) - this package
 - [async.queue](https://npmjs.org/package/async) - in-memory work queue
 - [fastq](https://npmjs.org/package/fastq) - async.queue clone, but much faster
-- [aflow](https://npmjs.org/package/aflow) - lean, efficient async serial flow control
+- [aflow](https://npmjs.org/package/aflow) - lean, fast async serial flow control
+- [qtimeit](https://npmjs.org/package/qtimeit) - accurate nodejs timings
 
 
 Todo
