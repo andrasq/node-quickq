@@ -7,7 +7,7 @@ Quickq is a very fast engine for processing data arriving at arbitrary times, ve
 low overhead for even small payloads.  Items are appended to the work queue and are
 processed in arrival order by one or more concurrent execution threads.
 
-Similar to async.queue but much faster, less flaky, and with a simpler interface.
+Similar to async.queue but much faster, more reliable, and with a simpler interface.
 
 
 Overview
@@ -34,13 +34,13 @@ Overview
 Benchmark
 ---------
 
-Time to enqueue and run 1 million no-op tasks, timed with Date.now():
+Time to enqueue and run 1 million no-op tasks, timed with `process.hrtime()`:
 
     async.queue - 5.2 sec
     fastq - 1.42 sec
     quickq - 0.16 sec
 
-Time create queue then enqueue and run 100k no-op tasks, timed with qtimeit:
+Time create queue then enqueue and run 100k no-op tasks, timed with `qtimeit`:
 (node-v6.3.0, async-2.0.1, fastq-1.4.1, quickq-0.8.0)
 
     node=6.3.0 arch=ia32 mhz=3500 cpu="AMD Phenom(tm) II X4 B55 Processor" up_threshold=11
@@ -108,11 +108,11 @@ If set, function to call whenever the work queue empties.
 ### q.length
 
 The number of jobs in the queue that have not finished yet, ie jobs waiting to run
-or running.  Do not alter this value.
+or running.  Do not change this value.
 
 ### q.running
 
-The number of jobs currently being processed.  Do not alter this value.
+The number of jobs currently being processed.  Do not change this value.
 
 ### q.concurrency
 
@@ -123,9 +123,9 @@ lower the concurrency.  Raising this value takes effect on the next call to `res
 Related Work
 ------------
 
-- [quickq](https://github.com/andrasq/node-quickq) - this package
+- [quickq](https://github.com/andrasq/node-quickq) - this package, async.queue work-alike, 30x faster
+- [fastq](https://npmjs.org/package/fastq) - async.queue clone, 3.5x faster
 - [async.queue](https://npmjs.org/package/async) - in-memory work queue
-- [fastq](https://npmjs.org/package/fastq) - async.queue clone, but much faster
 - [aflow](https://npmjs.org/package/aflow) - lean, fast async serial flow control
 - [qtimeit](https://npmjs.org/package/qtimeit) - accurate nodejs timings
 
@@ -135,4 +135,3 @@ Todo
 
 - figure out how to wrap in closure for browsers and still maintain 100% coverage
 - change _scheduleJob to take as input the first job to run, deprecate getLength() use just isEmpty()
-

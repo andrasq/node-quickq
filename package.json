@@ -1,8 +1,8 @@
 {
   "name": "quickq",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "main": "quickq.js",
-  "description": "fast in-memory work queue",
+  "description": "very fast in-memory work queue",
   "license": "Apache-2.0",
   "repository": {
     "url": "git://github.com/andrasq/node-quickq",
