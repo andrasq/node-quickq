@@ -40,7 +40,7 @@ Time to enqueue and run 1 million no-op tasks, timed with `process.hrtime()`:
     fastq - 1.42 sec
     quickq - 0.16 sec
 
-Time create queue then enqueue and run 100k no-op tasks, timed with `qtimeit`:
+Time to create queue then enqueue and run 100k no-op tasks, timed with `qtimeit`:
 (node-v6.3.0, async-2.0.1, fastq-1.4.1, quickq-0.8.0)
 
     node=6.3.0 arch=ia32 mhz=3500 cpu="AMD Phenom(tm) II X4 B55 Processor" up_threshold=11
