@@ -116,8 +116,9 @@ The number of jobs currently being processed.  Do not change this value.
 
 ### q.concurrency
 
-The currently configured concurrency.  Setting this value lower will immediately
-lower the concurrency.  Raising this value takes effect on the next call to `resume`.
+The currently configured concurrency.  Changing this value sets a new concurrency,
+but `resume()` with an argument is preferred.  A lowering value will immediately
+lower the concurrency.  A higher value takes effect on the next call to `resume`.
 
 
 Related Work
