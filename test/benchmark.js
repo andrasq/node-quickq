@@ -11,7 +11,7 @@ var qtimeit = require('qtimeit');
 var aflow = require('aflow');
 var async = require('async');
 var fastq = require('fastq');
-var quickq = require('./');
+var quickq = require('../');
 
 var ncalls = 0, ndone = 0;
 function handler(payload, cb) {

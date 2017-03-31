@@ -4,11 +4,11 @@
 
 'use strict';
 
-var quickq = require('./');
+var quickq = require('../');
 
 module.exports = {
     'should parse package.json': function(t) {
-        require("./package.json");
+        require("../package.json");
         t.done();
     },
 

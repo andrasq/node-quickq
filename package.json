@@ -1,7 +1,7 @@
 {
   "name": "quickq",
-  "version": "0.8.2",
-  "main": "quickq.js",
+  "version": "0.9.0",
+  "main": "index.js",
   "description": "very fast in-memory work queue",
   "license": "Apache-2.0",
   "repository": {
