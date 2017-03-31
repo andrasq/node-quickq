@@ -2,7 +2,7 @@
   "name": "quickq",
   "version": "0.9.0",
   "main": "index.js",
-  "description": "very fast in-memory work queue",
+  "description": "very fast in-memory multi-tenant work queue",
   "license": "Apache-2.0",
   "repository": {
     "url": "git://github.com/andrasq/node-quickq",
@@ -10,7 +10,7 @@
   },
   "keywords": [ "quick", "in-memory", "work", "job", "queue", "Andras" ],
   "dependencies": {
-    "qlist": "0.11.1",
+    "qlist": "0.13.0",
     "aflow": "0.10.1"
   },
   "devDependencies": {
