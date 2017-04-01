@@ -91,11 +91,14 @@ aflow.repeatWhile(
             quickq_scheduled: function(done) {
                 ncalls = ndone = 0;
                 var q = quickq(handlerI, { concurrency: concurrency, scheduler: 'fair' });
-                q.drain = done;
+                q.drain = function(){
+                    //console.log("AR: made %d calls, %d done", ncalls, ndone);
+                    done();
+                }
                 //for (var i=0; i<ntasks; i++) q.pushType('jobtype', 0, taskDone);
-                for (var i=0; i<ntasks; i+=20) {
-                    for (var j=0; j<10; j++) q.pushType('jobtype1', 0, taskDone);
-                    for (var j=0; j<10; j++) q.pushType('jobtype2', 0, taskDone);
+                for (var i=0; i<ntasks; i+=100) {
+                    for (var j=0; j<50; j++) q.pushType('jobtype1', 0, taskDone);
+                    for (var j=0; j<50; j++) q.pushType('jobtype2', 0, taskDone);
                 }
             },
         },
