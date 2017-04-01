@@ -168,5 +168,6 @@ Todo
 ----
 
 - figure out how to wrap in closure for browsers and still maintain 100% coverage
-- change _scheduleJob to take as input the first job to run, deprecate getLength() use just isEmpty()
 - make queue into an event emitter, emit 'drain' 'job' and 'error' events
+- maybe more compatibility functions
+- multi-tenant unit tests
