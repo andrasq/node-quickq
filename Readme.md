@@ -76,7 +76,7 @@ Options:
 - `concurrency` - how many jobs to process concurrently (default 10)
 - `scheduler` - type of job scheduling desired.  Default is first-come-first-served.
     - `"fair"` - the built-in "fair-share" scheduler runs each job type in proportion
-      to the number waiting, not to exceed 80% those running.
+      to the number waiting, not to exceed 80%
 
 ### q.push( payload [,callback(err, ret)] )
 
