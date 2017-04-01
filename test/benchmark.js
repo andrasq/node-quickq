@@ -25,6 +25,10 @@ function handler(payload, cb) {
     process.nextTick(cb);
     //setImmediate(cb);
 }
+function handlerI(payload, cb) {
+    ncalls += 1;
+    setImmediate(cb);
+}
 function handlerCb(payload, cb) {
     ncalls += 1;
     cb();
@@ -75,12 +79,24 @@ aflow.repeatWhile(
             // (ie, from 6x faster to 3x faster than fastq).
             // Quickq by itself or with just async.queue stays fast.
             // Same on Skylake, w/ 10k tasks 5th run drops from 17m/s to 10m/s with setImmediate
-            // or 18m/s to 13m/s on 7th run with nextTick (async.queue drops from 860k/s to 740k/s)
+            // or 18m/s to 13m/s on 7th run with nextTick (async.queue drops from 860k/s to 740k/s),
+            // but happens even standalone from the 10th iteration on; or 6th on concurr 5.
             quickq: function(done) {
                 ncalls = ndone = 0;
                 var q = quickq(handlerCb, {concurrency: concurrency});
                 q.drain = done;
                 for (var i=0; i<ntasks; i++) q.push(0, taskDone);
+            },
+
+            quickq_scheduled: function(done) {
+                ncalls = ndone = 0;
+                var q = quickq(handlerI, { concurrency: concurrency, scheduler: 'fair' });
+                q.drain = done;
+                //for (var i=0; i<ntasks; i++) q.pushType('jobtype', 0, taskDone);
+                for (var i=0; i<ntasks; i+=20) {
+                    for (var j=0; j<10; j++) q.pushType('jobtype1', 0, taskDone);
+                    for (var j=0; j<10; j++) q.pushType('jobtype2', 0, taskDone);
+                }
             },
         },
         function(err){
