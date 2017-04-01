@@ -61,18 +61,6 @@ Time to create, queue, then enqueue and run 100k no-op tasks, timed with `qtimei
     quickq  6,953,456 ops/sec (6 runs of 20 in 1.726 over 2.977s, +/- 0%) 30251
 
 
-Analysis
---------
-
-For its 30x efficiency improvement over `async.queue`, `quickq` leverages
-- [aflow.repeatUntil](https://npmjs.org/package/aflow), is very very efficient at
-  looping over async functions, eg the job runner
-- [qlist](https://npmjs.org/package/qlist) circular buffers, faster than native arrays
-- the job callbacks are invoked from a pre-defined function, not from an inline
-  callback created inside the function call arguments list
-- omitting convenience features from the api that add delays to the critical path
-
-
 Api
 ---
 
@@ -87,7 +75,7 @@ the job and a callback that must be called when the job is finished.
 Options:
 - `concurrency` - how many jobs to process concurrently (default 10)
 - `scheduler` - type of job scheduling desired.  Default is first-come-first-served.
-    - `fair` - the built-in "fair-share" scheduler runs each job type in proportion
+    - `"fair"` - the built-in "fair-share" scheduler runs each job type in proportion
       to the number waiting, not to exceed 80% those running.
 
 ### q.push( payload [,callback(err, ret)] )
@@ -151,6 +139,18 @@ The number of jobs currently being processed.  Do not change this value.
 The currently configured concurrency.  Changing this value sets a new concurrency,
 but `resume()` with an argument is preferred.  Setting a lower value will immediately
 lower the concurrency.  A higher value takes effect on the next call to `resume`.
+
+
+Analysis
+--------
+
+For its 30x efficiency improvement over `async.queue`, `quickq` leverages
+- [aflow.repeatUntil](https://npmjs.org/package/aflow), is very very efficient at
+  looping over async functions, eg the job runner
+- [qlist](https://npmjs.org/package/qlist) circular buffers, faster than native arrays
+- the job callbacks are invoked from a pre-defined function, not from an inline
+  callback created inside the function call arguments list
+- omitting convenience features from the api that add delays to the critical path
 
 
 Related Work
