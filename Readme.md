@@ -87,8 +87,8 @@ the job and a callback that must be called when the job is finished.
 Options:
 - `concurrency` - how many jobs to process concurrently (default 10)
 - `scheduler` - type of job scheduling desired.  Default is first-come-first-served.
--- `fair` - the built-in "fair-share" scheduler runs each job type in proportion
-to the number waiting, not to exceed 80% those running.
+    - `fair` - the built-in "fair-share" scheduler runs each job type in proportion
+      to the number waiting, not to exceed 80% those running.
 
 ### q.push( payload [,callback(err, ret)] )
 
