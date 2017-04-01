@@ -159,6 +159,8 @@ Related Work
 - [quickq](https://github.com/andrasq/node-quickq) - this package, async.queue work-alike, 30x faster
 - [fastq](https://npmjs.org/package/fastq) - async.queue clone, 3.5x faster
 - [async.queue](https://npmjs.org/package/async) - in-memory work queue
+- [stackoverflow.com](http://stackoverflow.com/questions/28388281/job-scheduling-algorithm-for-cluster/28389114#28389114) -
+  a discussion on what makes for fair scheduling
 - [aflow](https://npmjs.org/package/aflow) - lean, fast async serial flow control
 - [qlist](https://npmjs.org/package/qlist) - extremely fast list mapped into a circular buffer
 - [qtimeit](https://npmjs.org/package/qtimeit) - accurate nodejs timings
@@ -171,3 +173,4 @@ Todo
 - make queue into an event emitter, emit 'drain' 'job' and 'error' events
 - maybe more compatibility functions
 - multi-tenant unit tests
+- support pluggable schedulers
