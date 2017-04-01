@@ -5,8 +5,8 @@ Fast in-memory work queue.
 
 Quickq is an extremely fast, low overhead, buffering and throttling job processing
 engine.  Work arriving in bunches is queued and run at a controlled pace configured
-by the server, not at the mercy of happenstance.  Jobs appended to the work queue
-are processed in arrival.
+by the server, not as a matter of chance.  Jobs in the work queue are processed in
+arrival order.
 
 Multi-tenant job mixes are supported with a built-in "fair-share" scheduler option.
 
