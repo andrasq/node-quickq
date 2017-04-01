@@ -56,6 +56,7 @@ Analysis
 For its 30x efficiency improvement over `async.queue`, `quickq` leverages
 - [aflow.repeatUntil](https://npmjs.org/package/aflow), is very very efficient at
   looping over async functions, eg the job runner
+- `qlist` circular buffers, faster than native arrays
 - the job callbacks are invoked from a pre-defined function, not from an inline
   callback created inside the function call arguments list
 - omitting convenience features from the api that add delays to the critical path
@@ -128,6 +129,7 @@ Related Work
 - [fastq](https://npmjs.org/package/fastq) - async.queue clone, 3.5x faster
 - [async.queue](https://npmjs.org/package/async) - in-memory work queue
 - [aflow](https://npmjs.org/package/aflow) - lean, fast async serial flow control
+- [qlist](https://npmjs.org/package/qlist) - extremely fast list mapped into a circular buffer
 - [qtimeit](https://npmjs.org/package/qtimeit) - accurate nodejs timings
 
 

@@ -22,6 +22,7 @@ function handler(payload, cb) {
     // wrapping cb with async.ensureAsync() fixes the crash, but is 20% slower
 
     // fastq runs 50% faster with nextTick than setImmediate, async.queue runs 5% faster
+    // nextTick is prohibited in node-v0.10.42
     process.nextTick(cb);
     //setImmediate(cb);
 }
@@ -96,9 +97,11 @@ aflow.repeatWhile(
                     done();
                 }
                 //for (var i=0; i<ntasks; i++) q.pushType('jobtype', 0, taskDone);
-                for (var i=0; i<ntasks; i+=100) {
-                    for (var j=0; j<50; j++) q.pushType('jobtype1', 0, taskDone);
-                    for (var j=0; j<50; j++) q.pushType('jobtype2', 0, taskDone);
+                for (var i=0; i<ntasks; i+=20) {
+                    for (var j=0; j<10; j++) q.pushType('jobtype1', 0, taskDone);
+                    for (var j=0; j<5; j++) q.pushType('jobtype2', 0, taskDone);
+                    for (var j=0; j<3; j++) q.pushType('jobtype3', 0, taskDone);
+                    for (var j=0; j<2; j++) q.pushType('jobtype4', 0, taskDone);
                 }
             },
         },
