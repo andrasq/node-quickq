@@ -26,6 +26,10 @@ function handler(payload, cb) {
     process.nextTick(cb);
     //setImmediate(cb);
 }
+function handlerT(payload, cb) {
+    ncalls += 1;
+    process.nextTick(cb);
+}
 function handlerI(payload, cb) {
     ncalls += 1;
     setImmediate(cb);
@@ -59,7 +63,7 @@ aflow.repeatWhile(
         qtimeit.bench({
             'async.queue': function(done) {
                 ncalls = ndone = 0;
-                var q = async.queue(handler, concurrency);                // 205k/s
+                var q = async.queue(handlerI, concurrency);               // 205k/s
                 //var q = async.queue(async.ensureAsync(handlerCb), 10);  // 162k/s
                 //var q = async.queue(async.ensureAsync(handler), 10);    // 171-177k/s
                 //var q = async.queue(handlerCb10, 10);                   // 221k/s
@@ -70,7 +74,7 @@ aflow.repeatWhile(
             // fastq is extremely slow under node-v0.10.42
             fastq: function(done) {
                 ncalls = ndone = 0;
-                var q = fastq(handler, concurrency);
+                var q = fastq(handlerI, concurrency);
                 q.drain = done;
                 for (var i=0; i<ntasks; i++) q.push(0, taskDone);
             },
