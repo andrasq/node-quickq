@@ -87,9 +87,9 @@ Options:
     - `"fair"`
         - `maxTypeShare` - cap on the share a single type may occupy of the
           available concurrency. (Default 0.80, 80%.)
-        - `maxScanLength` - upper limit on far to scan the waiting jobs looking
-          for a suitable job type to run.  If no suitable type is found, the
-          first waiting job is selected.  (Default 1000.)
+        - `maxScanLength` - upper limit on how far ahead to scan the waiting jobs
+          when looking for a suitable job type to run.  If a suitable type is not found,
+          the first waiting job is selected.  (Default 1000.)
 
 ### q.push( payload [,callback(err, ret)] )
 
