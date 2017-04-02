@@ -9,6 +9,9 @@ by the server, not as a matter of chance.  Jobs in the work queue are processed 
 arrival order.
 
 Multi-tenant job mixes are supported with a built-in "fair-share" scheduler option.
+The fair share scheduler tracks jobs by their `type`, and limits the number of running
+jobs of any type to that type's share of the jobs queued.  The share is capped
+at a configurable 80% of the available job slots.
 
 Similar to `async.queue` but much much faster and with fewer surprises.
 
@@ -73,10 +76,20 @@ used as the concurrency.
 the job and a callback that must be called when the job is finished.
 
 Options:
-- `concurrency` - how many jobs to process concurrently (default 10)
-- `scheduler` - type of job scheduling desired.  Default is first-come-first-served.
+- `concurrency` - how many jobs to process concurrently; the number of available job
+  slots.  Jobs in excess are started after one of the running jobs finishes. (default 10)
+- `scheduler` - type of job scheduling desired.  (Default is first-available, no scheduling.)
     - `"fair"` - the built-in "fair-share" scheduler runs each job type in proportion
-      to the number waiting, not to exceed 80%
+      to the number waiting, not to exceed 80%.  Jobs within a type are run in the
+      order queued.
+    - `[object]` - a provided object will be used as-is as the scheduler.
+- `schedulerOptions` - scheduler-specific options.
+    - `"fair"`
+        - `maxTypeShare` - cap on the share a single type may occupy of the
+          available concurrency. (Default 0.80, 80%.)
+        - `maxScanLength` - upper limit on far to scan the waiting jobs looking
+          for a suitable job type to run.  If no suitable type is found, the
+          first waiting job is selected.  (Default 1000.)
 
 ### q.push( payload [,callback(err, ret)] )
 
