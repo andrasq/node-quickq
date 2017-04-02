@@ -1,7 +1,7 @@
 quickq
 ======
 
-Fast in-memory work queue.
+Fast in-memory multi-tenant work queue.
 
 Quickq is an extremely fast, low overhead, buffering and throttling job processing
 engine.  Work arriving in bunches is queued and run at a controlled pace configured
