@@ -19,6 +19,7 @@
   },
   "scripts": {
     "coverage": "nyc --reporter lcov --reporter text qnit test-quickq.js",
+    "clean": "rm -rf .nyc_output coverage",
     "test": "qnit test-quickq.js"
   }
 }
