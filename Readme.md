@@ -186,3 +186,4 @@ Todo
 - make queue into an event emitter, emit 'drain' 'job' and 'error' events
 - maybe more compatibility functions
 - multi-tenant unit tests
+- reconcile "task" vs "job" nomenclature

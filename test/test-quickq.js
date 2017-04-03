@@ -5,6 +5,7 @@
 'use strict';
 
 var quickq = require('../');
+var FairScheduler = require('../lib/scheduler-fair.js');
 
 module.exports = {
     'should parse package.json': function(t) {
@@ -17,6 +18,7 @@ module.exports = {
         this.jobs = jobs;
         this.handler = function(job, cb){ jobs.push(job); setTimeout(cb, job) };
         this.q = quickq(this.handler, 2);
+        this.fairQ = quickq(this.handler, { concurrency: 2, scheduler: 'fair' });
         done();
     },
 
@@ -73,6 +75,24 @@ module.exports = {
             this.q.push(2);
             this.q.push(3);
             t.equal(this.q.length, 3);
+            t.done();
+        },
+
+        'pushType should invoke push with the payload': function(t) {
+            var payload = Math.random();
+            var arg;
+            this.q._push = function(x) { arg = x; }
+            this.q.pushType('jobtype1', payload);
+            t.equal(arg, payload);
+            t.done();
+        },
+
+        'unshiftType should invoke unshift with the payload': function(t) {
+            var payload = Math.random();
+            var arg;
+            this.q._unshift = function(x) { arg = x; }
+            this.q.unshiftType('jobtype1', payload);
+            t.equal(arg, payload);
             t.done();
         },
     },
@@ -192,6 +212,71 @@ module.exports = {
             });
             q.push(2);
             setTimeout(function(){}, 5);
+        },
+    },
+
+    'scheduler': {
+        'constructor': {
+            'should use built-in "fair scheduler': function(t) {
+                var jobRunner = function(){};
+                var q = quickq(jobRunner, { scheduler: 'fair' });
+                t.ok(q.scheduler instanceof FairScheduler);
+                t.done();
+            },
+
+            'should use provided scheduler object': function(t) {
+                var jobRunner = function(){};
+                var fn = function(){};
+                var scheduler = { waiting: fn, start: fn, done: fn, select: fn };
+                var q = quickq(jobRunner, { scheduler: scheduler });
+                t.done();
+            },
+
+            'should reject invalid non-scheduler object': function(t) {
+                var jobRunner = function(){};
+                var notScheduler = { someProperty: 1 };
+                t.expect(1);
+                t.throws(function(){ quickq(jobRunner, { scheduler: notScheduler }) });
+                t.done();
+            },
+
+            'should reject invalid scheduler': function(t) {
+                var scheduler = 3.5;
+                t.throws(function(){ quickq(function(){}, { scheduler: scheduler }) });
+                t.done();
+            },
+        },
+
+        'should reject untyped push and unshift': function(t) {
+            var self = this;
+            t.throws(function(){ self.fairQ.push(1) });
+            t.throws(function(){ self.fairQ.unshift(1) });
+            t.done();
+        },
+
+        'should queue jobs with pushType': function(t) {
+            this.fairQ.pushType('type2', 2);
+            this.fairQ.unshiftType('type1', 1);
+            this.fairQ.pushType('type3', 3);
+            var self = this;
+            setTimeout(function(){
+                t.deepEqual(self.jobs, [1, 2, 3]);
+                t.done();
+            }, 5);
+        },
+
+        'should skip blocked job types': function(t) {
+            this.fairQ.pushType('type1', 1);
+            this.fairQ.pushType('type1', 2);
+            this.fairQ.pushType('type1', 3);
+            this.fairQ.pushType('type1', 4);
+            this.fairQ.pushType('type2', 5);
+            this.fairQ.pushType('type3', 6);
+            var self = this;
+            setTimeout(function(){
+                t.deepEqual(self.jobs, [1, 2, 5, 3, 4, 6]);
+                t.done();
+            }, 20);
         },
     },
 
