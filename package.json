@@ -10,7 +10,7 @@
   },
   "keywords": [ "quick", "in-memory", "work", "job", "queue", "Andras" ],
   "dependencies": {
-    "qlist": "0.13.0",
+    "qlist": "0.13.1",
     "aflow": "0.10.1"
   },
   "devDependencies": {
