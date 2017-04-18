@@ -1,6 +1,6 @@
 {
   "name": "quickq",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "main": "index.js",
   "description": "very fast in-memory multi-tenant work queue",
   "license": "Apache-2.0",
@@ -20,6 +20,6 @@
   "scripts": {
     "coverage": "nyc --reporter lcov --reporter text qnit test-quickq.js",
     "clean": "rm -rf .nyc_output coverage",
-    "test": "qnit test-quickq.js"
+    "test": "qnit test/test*"
   }
 }

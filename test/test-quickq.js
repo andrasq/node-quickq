@@ -266,15 +266,15 @@ module.exports = {
         },
 
         'should skip blocked job types': function(t) {
-            this.fairQ.pushType('type1', 1);
             this.fairQ.pushType('type1', 2);
-            this.fairQ.pushType('type1', 3);
             this.fairQ.pushType('type1', 4);
-            this.fairQ.pushType('type2', 5);
-            this.fairQ.pushType('type3', 6);
+            this.fairQ.pushType('type1', 6);
+            this.fairQ.pushType('type1', 8);
+            this.fairQ.pushType('type2', 10);
+            this.fairQ.pushType('type3', 12);
             var self = this;
             setTimeout(function(){
-                t.deepEqual(self.jobs, [1, 2, 5, 3, 4, 6]);
+                t.deepEqual(self.jobs, [2, 4, 10, 6, 8, 12]);
                 t.done();
             }, 20);
         },
