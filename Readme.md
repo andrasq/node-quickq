@@ -1,6 +1,9 @@
 quickq
 ======
 
+[![Build Status](https://api.travis-ci.org/andrasq/node-quickq.png?branch=master)](https://travis-ci.org/andrasq/node-quickq)
+[![Coverage Status](https://coveralls.io/repos/github/andrasq/node-quickq/badge.png)](https://coveralls.io/github/andrasq/node-quickq)
+
 Fast in-memory multi-tenant work queue.
 
 Quickq is an extremely fast, low overhead, buffering and throttling job processing
