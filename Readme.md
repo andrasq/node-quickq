@@ -1,8 +1,8 @@
 quickq
 ======
 
-[![Build Status](https://api.travis-ci.org/andrasq/node-quickq.png?branch=master)](https://travis-ci.org/andrasq/node-quickq)
-[![Coverage Status](https://coveralls.io/repos/github/andrasq/node-quickq/badge.png)](https://coveralls.io/github/andrasq/node-quickq)
+[![Build Status](https://api.travis-ci.org/andrasq/node-quickq.png?branch=master)](https://travis-ci.org/andrasq/node-quickq?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/andrasq/node-quickq/badge.png?branch=master)](https://coveralls.io/github/andrasq/node-quickq?branch=master)
 
 Fast in-memory multi-tenant work queue.
 
