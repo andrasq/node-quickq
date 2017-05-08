@@ -17,10 +17,9 @@
     "qtimeit": "0.16.0"
   },
   "scripts": {
+    "test": "qnit test/test-*",
     "coverage": "nyc --reporter lcov --reporter text npm run test",
     "clean": "rm -rf .nyc_output coverage",
-    "test": "qnit test/test-*",
-    "coveralls": "nyc --reporter text-lcov npm run test | coveralls",
     "codecov": "nyc --reporter lcov npm test && codecov"
   }
 }
