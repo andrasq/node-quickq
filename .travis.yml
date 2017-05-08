@@ -11,4 +11,6 @@ install:
 after_success:
   - npm install -g nyc
   - npm install -g coveralls
+  - npm install -g codecov
   - npm run coveralls
+  - npm run codecov
