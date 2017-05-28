@@ -1,6 +1,6 @@
 {
   "name": "quickq",
-  "version": "0.9.2",
+  "version": "0.9.3",
   "main": "index.js",
   "description": "very fast in-memory multi-tenant work queue",
   "license": "Apache-2.0",
@@ -19,7 +19,6 @@
   "scripts": {
     "test": "qnit test/test-*",
     "coverage": "nyc --reporter lcov --reporter text npm run test",
-    "clean": "rm -rf .nyc_output coverage",
-    "codecov": "nyc --reporter lcov npm test && codecov"
+    "clean": "rm -rf .nyc_output coverage"
   }
 }

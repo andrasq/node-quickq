@@ -95,6 +95,30 @@ module.exports = {
             t.equal(arg, payload);
             t.done();
         },
+
+        'pushType should cast type to string': function(t) {
+            this.fairQ.pushType(undefined, 1);
+            this.fairQ.pushType(null, 2);
+            this.fairQ.pushType(0, 3);
+            this.fairQ.pushType('00', 3);
+            t.strictEqual(this.fairQ._types.peekAt(0), 'undefined');
+            t.strictEqual(this.fairQ._types.peekAt(1), 'null');
+            t.strictEqual(this.fairQ._types.peekAt(2), '0');
+            t.strictEqual(this.fairQ._types.peekAt(3), '00');
+            t.done();
+        },
+
+        'unshiftType should cast type to string': function(t) {
+            this.fairQ.unshiftType(undefined, 1);
+            this.fairQ.unshiftType(null, 2);
+            this.fairQ.unshiftType(0, 3);
+            this.fairQ.unshiftType('00', 3);
+            t.strictEqual(this.fairQ._types.peekAt(3), 'undefined');
+            t.strictEqual(this.fairQ._types.peekAt(2), 'null');
+            t.strictEqual(this.fairQ._types.peekAt(1), '0');
+            t.strictEqual(this.fairQ._types.peekAt(0), '00');
+            t.done();
+        },
     },
 
     'running': {
