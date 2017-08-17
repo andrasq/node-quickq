@@ -89,13 +89,15 @@ aflow.repeatWhile(
             quickq: function(done) {
                 ncalls = ndone = 0;
                 var q = quickq(handlerCb, {concurrency: concurrency});
+                //var q = quickq(handler, {concurrency: concurrency});
+                //var q = quickq(handlerT, {concurrency: concurrency});
                 q.drain = done;
                 for (var i=0; i<ntasks; i++) q.push(0, taskDone);
             },
 
             quickq_scheduled: function(done) {
                 ncalls = ndone = 0;
-                var q = quickq(handlerI, { concurrency: concurrency, scheduler: 'fair' });
+                var q = quickq(handlerCb, { concurrency: concurrency, scheduler: 'fair' });
                 q.drain = function(){
                     //console.log("AR: made %d calls, %d done", ncalls, ndone);
                     done();

@@ -1,6 +1,6 @@
 {
   "name": "quickq",
-  "version": "0.9.3",
+  "version": "0.9.4",
   "main": "index.js",
   "description": "very fast in-memory multi-tenant work queue",
   "license": "Apache-2.0",
@@ -10,6 +10,7 @@
   },
   "keywords": [ "quick", "in-memory", "work", "job", "queue", "Andras" ],
   "dependencies": {
+    "mongoid-js": "1.1.0",
     "qlist": "0.13.1",
     "aflow": "0.10.1"
   },

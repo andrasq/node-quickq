@@ -189,3 +189,4 @@ Todo
 - make queue into an event emitter, emit 'drain' 'job' and 'error' events
 - maybe more compatibility functions
 - reconcile "task" vs "job" nomenclature
+- introduce `rejectAbove` waiting types limit
