@@ -259,8 +259,7 @@ module.exports = {
             'should reject invalid non-scheduler object': function(t) {
                 var jobRunner = function(){};
                 var notScheduler = { someProperty: 1 };
-                t.expect(1);
-                t.throws(function(){ quickq(jobRunner, { scheduler: notScheduler }) });
+                t.throws(function(){ quickq(jobRunner, { scheduler: notScheduler }) }, /scheduler/);
                 t.done();
             },
 
@@ -297,6 +296,7 @@ module.exports = {
             this.fairQ.pushType('type2', 10);
             this.fairQ.pushType('type3', 12);
             var self = this;
+            // FIXME: race condition: sometimes finishes in a different order
             setTimeout(function(){
                 t.deepEqual(self.jobs, [2, 4, 10, 6, 8, 12]);
                 t.done();

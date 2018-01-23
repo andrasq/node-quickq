@@ -173,6 +173,7 @@ Related Work
 ------------
 
 - [quickq](https://github.com/andrasq/node-quickq) - this package, async.queue work-alike, 30x faster
+- [quickq writeup](https://github.com/andrasq/node-docs/blob/master/quickq-scheduler.md)
 - [fastq](https://npmjs.org/package/fastq) - async.queue clone, 3.5x faster
 - [async.queue](https://npmjs.org/package/async) - in-memory work queue
 - [stackoverflow.com](http://stackoverflow.com/questions/28388281/job-scheduling-algorithm-for-cluster/28389114#28389114) -
@@ -190,3 +191,4 @@ Todo
 - maybe more compatibility functions
 - reconcile "task" vs "job" nomenclature
 - introduce `rejectAbove` waiting types limit
+- 'equal-share' scheduler that runs all types equally
