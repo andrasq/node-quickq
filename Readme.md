@@ -183,6 +183,12 @@ Related Work
 - [qtimeit](https://npmjs.org/package/qtimeit) - accurate nodejs timings
 
 
+Change Log
+----------
+
+- 0.9.5 - do not include benchmark among the tests
+
+
 Todo
 ----
 

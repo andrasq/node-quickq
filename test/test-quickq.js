@@ -16,6 +16,7 @@ module.exports = {
     beforeEach: function(done) {
         var jobs = [];
         this.jobs = jobs;
+        // each fairQ job calls its callback after "job" milliseconds
         this.handler = function(job, cb){ jobs.push(job); setTimeout(cb, job) };
         this.q = quickq(this.handler, 2);
         this.fairQ = quickq(this.handler, { concurrency: 2, scheduler: 'fair' });
@@ -296,7 +297,14 @@ module.exports = {
             this.fairQ.pushType('type2', 10);
             this.fairQ.pushType('type3', 12);
             var self = this;
-            // FIXME: race condition: sometimes finishes in a different order
+            // NOTE: node-v8,v9 race condition: sometimes finishes in a different order;
+            // expect [2 4 10 6 8 12], get eg [2 4 10 6] or [2 4 10 6 8] or [2 4 10 6 12] or [2 4 10 6 12 8].
+            // Note that [2 4 10 6] implies that the 20ms setTimeout to check the results
+            // executed before the 8ms setTimeout fairQ job callback fired.
+            // Seems to only happen if run back-to-back to ./benchmark, but not standalone.
+            // The test worked with node-v4, v5, v6 and v7, but broke with v8 and v9,
+            // so newer node setTimeout() task order and/or timing is no longer determinstic
+            // when run in combination of code that blocks the event loop?
             setTimeout(function(){
                 t.deepEqual(self.jobs, [2, 4, 10, 6, 8, 12]);
                 t.done();

@@ -1,11 +1,13 @@
 /**
- * Copyright (C) 2016-2017 Andras Radics
+ * Copyright (C) 2016-2018 Andras Radics
  * Licensed under the Apache License, Version 2.0
  */
 
 ;(function(){
 
 'use strict';
+
+if (process.argv[1].indexOf('benchmark') < 0) return;
 
 var qtimeit = require('qtimeit');
 var aflow = require('aflow');
