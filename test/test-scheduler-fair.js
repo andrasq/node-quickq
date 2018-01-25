@@ -45,6 +45,14 @@ module.exports = {
             t.equal(s.maxScanLength, 789);
             t.done();
         },
+
+        'should configure instance': function(t) {
+            var s = new FairScheduler({ concurrency: 12 });
+            t.equal(s.concurrency, 12);
+            s.configure({ concurrency: 34 });
+            t.equal(s.concurrency, 34);
+            t.done();
+        },
     },
 
     'waiting': {

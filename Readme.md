@@ -186,7 +186,7 @@ Related Work
 Change Log
 ----------
 
-- 0.9.5 - do not include benchmark among the tests
+- 0.9.5 - do not include benchmark among the tests, propagate concurrency change to scheduler
 
 
 Todo

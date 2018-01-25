@@ -52,6 +52,16 @@ module.exports = {
             t.equal(q.concurrency, 3);
             t.done();
         },
+
+        'changing concurrency should propagate to scheduler': function(t) {
+            var q = quickq(this.handler, { concurrency: 10, scheduler: 'fair' });
+            var spy = t.spy(q.scheduler, 'configure');
+            q.concurrency = 123;
+            q.resume();
+            t.deepEqual(spy.args, [ [ { concurrency: 123 } ] ]);
+            t.equal(q.scheduler.concurrency, 123);
+            t.done();
+        },
     },
 
     'enqueue': {
