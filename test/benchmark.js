@@ -112,6 +112,22 @@ aflow.repeatWhile(
                     for (var j=0; j<2; j++) q.pushType('jobtype4', 0, taskDone);
                 }
             },
+
+            quickq_capped: function(done) {
+                ncalls = ndone = 0;
+                var q = quickq(handlerCb, { concurrency: concurrency, scheduler: 'capped' });
+                q.drain = function(){
+                    //console.log("AR: made %d calls, %d done", ncalls, ndone);
+                    done();
+                }
+                //for (var i=0; i<ntasks; i++) q.pushType('jobtype', 0, taskDone);
+                for (var i=0; i<ntasks; i+=20) {
+                    for (var j=0; j<10; j++) q.pushType('jobtype1', 0, taskDone);
+                    for (var j=0; j<5; j++) q.pushType('jobtype2', 0, taskDone);
+                    for (var j=0; j<3; j++) q.pushType('jobtype3', 0, taskDone);
+                    for (var j=0; j<2; j++) q.pushType('jobtype4', 0, taskDone);
+                }
+            },
         },
         function(err){
             console.log("--");
