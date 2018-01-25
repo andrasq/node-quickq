@@ -11,10 +11,12 @@ engine.  Work arriving in bunches is queued and run at a controlled pace configu
 by the server, not as a matter of chance.  Jobs in the work queue are processed in
 arrival order.
 
-Multi-tenant job mixes are supported with a built-in "fair-share" scheduler option.
+Multi-tenant job mixes are supported with a built-in "fair-share" or capped scheduler options.
 The fair share scheduler tracks jobs by their `type`, and limits the number of running
 jobs of any type to that type's share of the jobs queued.  The share is capped
-at a configurable 80% of the available job slots.
+at a configurable 80% of the available job slots.  The capped scheduler limits the number
+of running jobs of any one type to a configurable 80% of the available job slots, to a
+shared numeric limit, or to a type-specific numeric limit -- whichever is lower.
 
 Similar to `async.queue` but much much faster and with fewer surprises.
 
@@ -85,6 +87,9 @@ Options:
     - `"fair"` - the built-in "fair-share" scheduler runs each job type in proportion
       to the number waiting, not to exceed 80%.  Jobs within a type are run in the
       order queued.
+    - `"capped"` - the built-in "capped" scheduler runs each job type with a % share or max-count
+      cap or type-specific max count cap.  Jobs within a type are run in the order queued.
+      All applicable caps are applied; the limit will be the lowest one.
     - `[object]` - a provided object will be used as-is as the scheduler.
 - `schedulerOptions` - scheduler-specific options.
     - `"fair"`
@@ -93,6 +98,12 @@ Options:
         - `maxScanLength` - upper limit on how far ahead to scan the waiting jobs
           when looking for a suitable job type to run.  If a suitable type is not found,
           the first waiting job is selected.  (Default 1000.)
+    - `"capped"`
+        - `maxTypeShare` - as for the "fair" scheduler, default 80%.
+        - `maxScanLength` - as for the "fair" scheduler
+        - `maxTypeCap` - upper limit on the number of concurrent jobs of a single type
+          to apply to all types.  Default unlimited.
+        - `typeCaps` - object mapping types to type-specific caps.  Default empty mapping.
 
 ### q.push( payload [,callback(err, ret)] )
 
@@ -186,6 +197,7 @@ Related Work
 Change Log
 ----------
 
+- 0.10.0 - new `capped` scheduler
 - 0.9.5 - do not include benchmark among the tests, propagate concurrency change to scheduler
 
 

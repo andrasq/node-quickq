@@ -6,6 +6,7 @@
 
 var quickq = require('../');
 var FairScheduler = require('../lib/scheduler-fair.js');
+var CappedScheduler = require('../lib/scheduler-capped.js');
 
 module.exports = {
     'should parse package.json': function(t) {
@@ -256,6 +257,13 @@ module.exports = {
                 var jobRunner = function(){};
                 var q = quickq(jobRunner, { scheduler: 'fair' });
                 t.ok(q.scheduler instanceof FairScheduler);
+                t.done();
+            },
+
+            'should use built-in capped scheduler': function(t) {
+                var jobRunner = function(){};
+                var q = quickq(jobRunner, { scheduler: 'capped' });
+                t.ok(q.scheduler instanceof CappedScheduler);
                 t.done();
             },
 
