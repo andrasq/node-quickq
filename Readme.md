@@ -197,6 +197,7 @@ Related Work
 Change Log
 ----------
 
+- 0.10.1 - upgrade mongoid-js for bugfixes, upgrade qlist mem leak fix
 - 0.10.0 - new `capped` scheduler
 - 0.9.5 - do not include benchmark among the tests, propagate concurrency change to scheduler
 
