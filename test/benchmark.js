@@ -15,6 +15,9 @@ var async = require('async');
 var fastq = require('fastq');
 var quickq = require('../');
 
+// do not absolutely require setImmediate for things to work
+var setImmediate = global.setImmediate || function(fn) { process.nextTick(fn) };
+
 var ncalls = 0, ndone = 0;
 function handler(payload, cb) {
     ncalls += 1;
